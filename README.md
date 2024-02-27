@@ -15,3 +15,16 @@
 3. Postgress Database
 4. .env File
 5. api have to respond "Hello World"
+
+#### Task02
+
+**Acceptance criteria:**
+
+1. Use typeorm and his repository
+2. Use observables instead promises
+3. feature module "user"
+4. user should have propeties_
+    - name 
+    - email(unique)
+    - id (primary key)
+5. Use git flow

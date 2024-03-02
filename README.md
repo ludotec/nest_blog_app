@@ -28,3 +28,19 @@
     - email(unique)
     - id (primary key)
 5. Use git flow
+
+
+#### Task03 : Module auth with JWT authentication (login)
+
+**specifications**
+
+As a user I want to be able to authenticate myself so I can perform (later protected) requests.
+
+**Acceptance criteria:**
+1- New Endpoint: POST '/login', check password in method 
+2- Expand User model with password
+3- Store 'email' alway in lowercase
+4- Store 'password' alwas as hashed value in  database 
+5- Add an Auth Module for this
+
+

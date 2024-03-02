@@ -1,11 +1,16 @@
 import { Body, Controller, Get, Param, Post, Put, Delete } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user.interface';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, from } from 'rxjs';
+import { AuthService } from 'src/auth/services/auth.service';
+import { UserEntity } from '../models/user.entity';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(
+        private userService: UserService,
+        private readonly authService: AuthService
+        ) {}
 
     @Post()
     create(@Body() user: User): Observable<User | { error: any }> {
@@ -15,9 +20,18 @@ export class UserController {
         )
     }
 
+    @Post('login')
+    login(@Body() user: User): Observable<{ access_token: any }> {
+        return this.userService.login(user).pipe(
+            map((jwt: string)=> {
+                return { access_token: jwt };
+            }),
+        )
+    }
+
     @Get(':id')
     findOne(@Param() params): Observable<User> {
-        return this.userService.finOne(params.id)
+        return this.userService.findOne(params.id)
     }
 
     @Get()

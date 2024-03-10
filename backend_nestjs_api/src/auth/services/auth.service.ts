@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Observable, from } from 'rxjs';
-import { User } from 'src/user/interfaces/user.interface';
+import { IUser } from 'src/user/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +10,7 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService) {}
 
-    generateJWT(user: User): Observable<string> {
+    generateJWT(user: IUser): Observable<string> {
         return from(this.jwtService.signAsync({ user }));
     }
 

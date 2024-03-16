@@ -69,3 +69,4 @@ As a thecnical lead I want to see all users, for this I want pagination, so I ca
 3- endpoint create(), should always create a user wiyh the role "user"
 4- admin is the only that can change roles in users
 5- user can change his own password 
+6- Gettin all Users should be pageable, use QueryParams

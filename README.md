@@ -70,3 +70,21 @@ As a thecnical lead I want to see all users, for this I want pagination, so I ca
 4- admin is the only that can change roles in users
 5- user can change his own password 
 6- Gettin all Users should be pageable, use QueryParams
+
+#### Task06 : NG setup project
+
+**specifications**
+
+As a Users I want navigate between login and register, and as a editor or admin between other pages for this roles. So users can navigate to profile like editors and admins, but his profiles will be diferent.
+As a technical lead I want a SPA (PWA) with angular.
+
+**Acceptance criteria:**
+1- [+] set up with angular
+2- [+] modules for admin
+3- [+] basic routing
+4- [+] basic components/pages login register
+5- paginating overview over all users: angular material, table, pagination, endpoint getAllUsers()
+6- use proxy.conf to check if connection server is working.
+7- [+] PWA
+8- [+] CORS
+

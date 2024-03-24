@@ -6,6 +6,11 @@ import { IUser, UserRole } from '../interfaces/user.interface';
 import { Observable,  from, throwError } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { AuthService } from 'src/auth/services/auth.service';
+import {
+    paginate,
+    Pagination,
+    IPaginationOptions,
+  } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UserService {
@@ -14,6 +19,7 @@ export class UserService {
         private readonly authService: AuthService
     ) {}
 
+    
     login(user: IUser): Observable<string> {
         console.log('### user: ', user);
         return this.validateUser(user.email, user.password).pipe(
@@ -98,7 +104,20 @@ export class UserService {
          }),
         );
      
-     }
+    }
+
+    paginate(options: IPaginationOptions): Observable<Pagination<IUser>> {
+        return from(paginate<IUser>(this.userRepository, options)).pipe(
+            map((usersPageable: Pagination<IUser>) => {
+                usersPageable.items.forEach((user) => {
+                    delete user.password;
+                });
+                console.log('## usersPageable in paginate: ', usersPageable);
+                return usersPageable;
+            }),
+            
+        );
+    }
 
      findOne(id: number): Observable<IUser> {
         return from(this.userRepository.findOneBy({ id })).pipe(
@@ -154,10 +173,10 @@ export class UserService {
 
         return from(this.authService.hashPassword(user.password)).pipe(
             switchMap((passwordHash: string) => {
-                //const newUser = new UserEntity();
-                //newUser.password = passwordHash;
-                user.password = passwordHash;
-                return from(this.userRepository.update(Number(id), user)).pipe(
+                const newUser = new UserEntity();
+                newUser.password = passwordHash;
+
+                return from(this.userRepository.update(Number(id), newUser)).pipe(
                     switchMap(() => this.findOne(id)),
                 )
             }),

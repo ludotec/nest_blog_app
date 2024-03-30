@@ -9,3 +9,24 @@ export interface RegisterForm {
     password: string;
     role?: string;
 }
+
+export interface IJWT {
+    header: {
+        alg: string;
+        typ: string;
+    };
+    payload: {
+        sub: string;
+        exp: number;
+        iat: number;
+    }
+    signature: string;
+}
+
+export interface IJwtDecoded {
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    }
+}

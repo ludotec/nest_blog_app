@@ -5,7 +5,7 @@ services:
     image: 'postgres:latest'
     restart: always
     volumes:
-      - './${VOLUME_FOLDER}:/var/lib/postrgresql/data'
+      - './${VOLUME_FOLDER}:/var/lib/postgresql/data'
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

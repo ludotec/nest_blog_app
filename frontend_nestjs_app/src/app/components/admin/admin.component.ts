@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
 // Materials
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,8 +17,7 @@ import { MatCardModule } from '@angular/material/card';
   imports: [MatButtonModule,
    MatCardModule, MatFormFieldModule,
    MatIconModule, MatInputModule, MatPaginatorModule,
-   MatSelectModule, MatTableModule, MatToolbarModule,
-   BrowserAnimationsModule],
+   MatSelectModule, MatTableModule, MatToolbarModule,],
   template: `
     <p>
       overview works!

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginForm, RegisterForm } from '../interfaces/auth';
+import { IJwtDecoded, LoginForm, RegisterForm } from '../interfaces/auth';
 import { environment } from '../../environments/environment';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -43,9 +43,11 @@ export class AuthenticationService {
   getUserId(): Observable<number> {
   return of(localStorage.getItem(JWT_NAME)).pipe(
     switchMap((jwt: any) => of(this.jwtHelper.decodeToken(jwt)).pipe(
-      tap((decode: any) => console.log('# AuthenticatedService.getUserId: ', decode)),
-      map((decode: any) => decode.user.id)
-    )),
-  )    
+      tap((decode: null | IJwtDecoded) => console.log('# AuthenticatedService.getUserId: ', decode)),
+      map((decode: null | IJwtDecoded) => {
+          return decode ? decode.user.id : 0
+        })
+      )),
+    )    
   }
 }

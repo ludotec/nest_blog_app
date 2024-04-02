@@ -17,7 +17,7 @@ export class UserController {
         private readonly authService: AuthService
         ) {}
 
-    @Post()
+    @Post('register')
     create(@Body() user: IUser): Observable<IUser | { error: any }> {
         return this.userService.create(user).pipe(
             map((user: IUser)=> user ),

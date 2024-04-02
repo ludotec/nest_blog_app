@@ -68,9 +68,7 @@ As a thecnical lead I want to see all users, for this I want pagination, so I ca
 2- user should not ba able to update his own role.
 3- endpoint create(), should always create a user wiyh the role "user"
 4- admin is the only that can change roles in users
-<<<<<<< HEAD
 5- user can change his own password -doing
-=======
 5- user can change his own password 
 6- Gettin all Users should be pageable, use QueryParams
 
@@ -91,4 +89,33 @@ As a technical lead I want a SPA (PWA) with angular.
 7- [+] PWA
 8- [+] CORS
 
->>>>>>> develop
+#### Task08 : Formularios reactivos y validaciones con angular
+
+**desciption**
+
+Terminemos esos componentes pendientes de angular, con formularios reactivos, validaciones, angular material, etc.
+
+**Acceptance criteria:**
+1.- login formulario reactivo con validaciones
+2.- register formulario recativo con validaciones
+3.- Custom validators para 'Comparing passwords'
+4.- asyn vallidation para emailExist
+
+Vamos con el auth service y el user service, nos hará falta para poder loguearnos, registrarnos, sabe si un usuario ya existe a partie de su email, para ello utilizaremos los endpoints que hemos creado en el backend:
+
+1.- **auth.service**
+- login: http://localhost:4200/api/users/login
+- register: http://localhost:4200/api/users/register
+
+estos dos ya los hicimos, vamos con el user service
+
+2.- **user.service**
+- emailexists: http://lcalhost:4200/api/users/exist
+
+ahora vamos a los componentes, empecemos por el register:
+
+cearemos un formulario reactivo con agular material, con un email, password, password2 y un boton de submit.
+
+Vamos a la parte de html y con los mat-form-field creemos esos campos.
+
+

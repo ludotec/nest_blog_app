@@ -31,13 +31,13 @@ export class UserService {
                 }else {
                     return 'Wrong credentials';
                 }
-            })
-        )
-    }
+            }),
+        );
+    } 
 
     private validateUser(email: string, password: string): Observable<IUser> {
         return from(
-            this.findByEmail(email).pipe(
+            this.findByEmail(email.toLowerCase()).pipe(
                 switchMap((user: IUser)=> {
                     return this.authService
                         .comparePasswords(password, user.password).pipe(
@@ -58,8 +58,8 @@ export class UserService {
     private findByEmail(email: string): Observable<IUser> {
         return from(
             this.userRepository.findOne({
-                select: ['id', 'name', 'email', 'password'],
-                where: { email: email.toLocaleLowerCase() }, 
+                select: ['id', 'name', 'email', 'role', 'password'],
+                where: { email: email }, 
             }).then((user: IUser) => {
                 if (!user) {
                     throw new NotFoundException('User not found');
@@ -118,7 +118,6 @@ export class UserService {
                 usersPageable.items.forEach((user) => {
                     delete user.password;
                 });
-                console.log('## usersPageable in paginate: ', usersPageable);
                 return usersPageable;
             }),
             

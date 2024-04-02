@@ -22,7 +22,7 @@ export class AuthenticationService {
   login(loginForm: LoginForm) {
     return this.http.post<any>(`${BASE_URL}/api/users/login`, {email: loginForm.email, password: loginForm.password}).pipe(
       map((token) => {
-        localStorage.setItem(JWT_NAME, token.acces_token);
+        localStorage.setItem(JWT_NAME, token.access_token);
         console.log('# AuthenticationService.login: ', token);
         return token;
       })

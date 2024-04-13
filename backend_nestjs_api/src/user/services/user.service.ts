@@ -124,6 +124,39 @@ export class UserService {
         );
     }
 
+    paginateFilterByName(options: IPaginationOptions, user: IUser) {
+        return from(this.userRepository.findAndCount({
+            skip: Number(options.page) * Number(options.limit) || 0,
+            take: Number(options.limit) || 10,
+            order: {id: 'ASC'},
+            select: ['id', 'name', 'email', 'role'],
+            where: [
+                { name: Like(`%${user.name}%`), },
+            ],
+        })
+        ).pipe(
+            map(([users, totalUsers]) => {
+                const usersPageable: Pagination<IUser> = {
+                    items: users,
+                    links: {
+                        first: options.route + `?limit=${options.limit}`,
+                        previous: options.route + '',
+                        next: options.route + `?limit=${options.limit}&page=${Number(options.page) + 1}`,
+                        last: options.route + `?limit=${options.limit}&page=${Math.ceil(totalUsers / Number(options.page)) +1 }`,
+                    },
+                    meta: {
+                        currentPage: Number(options.page),
+                        itemCount: totalUsers,
+                        itemsPerPage: Number(options.limit),
+                        totalItems: totalUsers,
+                        totalPages: Math.ceil(totalUsers / Number(options.page))
+                    },
+                };
+                return usersPageable;
+            }),
+        );
+    }
+
      findOne(id: number): Observable<IUser> {
         return from(this.userRepository.findOneBy({ id })).pipe(
             map((user: IUser)=> {

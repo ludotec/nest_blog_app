@@ -10,10 +10,12 @@ async function bootstrap() {
       `${process.env.APP_URL_ORIGIN}:${process.env.APP_PORT_ORIGIN}`,
       'http://127.0.0.1:4200/',
       'http://localhost:4200/',
+      'http://172.24.208.1:4200'
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
   });
+  
  /*
   // ############ cache
   const isDevelopment = process.env.NODE_ENV === 'dev';

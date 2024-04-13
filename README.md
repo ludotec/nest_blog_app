@@ -118,4 +118,18 @@ cearemos un formulario reactivo con agular material, con un email, password, pas
 
 Vamos a la parte de html y con los mat-form-field creemos esos campos.
 
+#### Task-09: más test de cypress
+
+**tests**
+--> test cerar usuario, con 'name', 'password' y ver que al cerarlo nos devuelve ese usuario con un 'id', prestar atención quí a las validaciones, (email correcto y formulñario completo).
+--> test acceder al endpoint '/login' check password (email válido, formulario completo).
+--> test al crtear un usuario este debe guadar una password encriptada en bd
+--> test el email debe estar en minúsculas en la bd siempre.
+--> test comprobar si una petición (el admin actualiza un role) necesita el hasRole().
+-> test lo mismo para Roles guard().
+--> test todos los usuarios deben tener un role de tipo 'user' | 'editor' | 'admin'.
+--> test create() solo puede crear usuarios con role 'user'.
+--> test ver que funciona la paginación, crear al menos 15 usuarios para estas comprobaciones.
+
+
 

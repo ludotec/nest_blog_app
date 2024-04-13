@@ -17,7 +17,7 @@ export class UserController {
         private readonly authService: AuthService
         ) {}
 
-    @Post('register')
+    @Post()
     create(@Body() user: IUser): Observable<IUser | { error: any }> {
         return this.userService.create(user).pipe(
             map((user: IUser)=> user ),
@@ -62,16 +62,29 @@ export class UserController {
     index(
         @Query('page') page = 1,
         @Query('limit') limit =  10,
+        @Query('name') name: string,
     ): Observable<Pagination<IUser>> {
         limit = limit > 100 ? 100 : limit;
         
         const route = `${process.env.API_URL}:${process.env.API_PORT}/api/users`;
         console.log('#### route', route);
-        return this.userService.paginate({
-            page: Number(page),
-            limit: Number(limit),
-            route: route,
-        });
+        if (name === null || name === undefined) {
+            return this.userService.paginate({
+                page: Number(page),
+                limit: Number(limit),
+                route: route,
+            });
+        }else {
+            return this.userService.paginateFilterByName(
+                {
+                page: Number(page),
+                limit: Number(limit),
+                route: route,
+                },
+                { name }, 
+            );
+        }
+        
     }
 
     @UseGuards(JwtAuthGuard, UserIsUserGuard)

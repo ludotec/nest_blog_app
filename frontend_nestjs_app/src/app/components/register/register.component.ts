@@ -55,7 +55,7 @@ class CustomValidators {
         </mat-error>
         }
         @if(emailField?.hasError('emailIsUsed')) {
-        <mat-error  data-test-id="EmailIsUded">
+        <mat-error  data-test-id="ErrorEmailUsed">
           Este email ya está en uso.
         </mat-error>
         }

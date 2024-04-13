@@ -12,3 +12,20 @@ export enum UserRole {
     EDITOR = 'editor',
     USER = 'user'
 }
+
+export interface IUsersPaginated {
+    items: IUser[];
+    meta: {
+        totalItems: number,
+        itemCount: number,
+        itemsPerPage: number,
+        totalPages: number,
+        currentPage: number,
+    };
+    links: {
+        first: string,
+        previous: string,
+        next: string,
+        last: string,
+    }
+}

@@ -3,8 +3,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'
 import { IUsersPaginated } from 'app/interfaces/user';
-import { UsersService } from 'app/services/users.service';
-import { map } from 'rxjs';
+import { UsersService } from 'app/services/users/users.service';
+import { catchError, map, throwError } from 'rxjs';
 
 // Materials
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { environment } from 'environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -111,7 +112,8 @@ export class UsersComponent implements OnInit {
         this.dataSource = userPaginated;
         console.log('### DATA SOURCE: ', this.dataSource);
         return userPaginated;
-      })
+      }),
+      
     ).subscribe();
   }
 
@@ -137,7 +139,7 @@ export class UsersComponent implements OnInit {
   }
 
   navigateToProfile(id: number) {
-    this.router.navigate(['/users' + id], { relativeTo: this.activatedRoute });
+    this.router.navigate(['/users/' + id], { relativeTo: this.activatedRoute });
   }
 
   findByName(name: string) {

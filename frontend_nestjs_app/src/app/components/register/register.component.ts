@@ -2,8 +2,8 @@ import  {  AbstractControl, FormControl, FormsModule,  ReactiveFormsModule, Vali
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'app/services/authentication.service';
-import { UsersService } from 'app/services/users.service';
+import { AuthenticationService } from 'app/services/auth/authentication.service';
+import { UsersService } from 'app/services/users/users.service';
 import { map } from 'rxjs/operators';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable, from } from 'rxjs';
+import { IUser } from 'app/interfaces/user';
 
 class CustomValidators {
   static passwordsMatch(control: AbstractControl): ValidationErrors | null {
@@ -161,11 +162,15 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.invalid) {
+      console.log('## registerForm invalid');
       return;
     }
 
-    this.authService.register(this.registerForm.value).pipe(
-      map(() => this.router.navigate(['login'])) 
+    this.authService.registerAndLogin(this.registerForm.value).pipe(
+      map(({user, access_token}) => {
+        console.log('### resp: ', user, access_token);
+        this.router.navigate([`/users/${user.id}`])
+      }), 
     ).subscribe();
     // TODO: Use EventEmitter with form value
     console.warn(this.registerForm.value);

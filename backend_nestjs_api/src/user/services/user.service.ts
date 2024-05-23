@@ -70,7 +70,7 @@ export class UserService {
         );
     }
 
-    create(user: IUser): Observable<IUser> {
+    create(user: IUser): Observable<{ user: IUser, token: string  }> {
         return this.authService.hashPassword(user.password).pipe(
             switchMap((passwordHash: string) => {
                 const newUser = new UserEntity();
@@ -89,9 +89,14 @@ export class UserService {
                 }
                 // #################################################
                 return from(this.userRepository.save(newUser)).pipe(
-                    map((user: IUser) => {
-                        const {password, ...result} = user;
-                        return result;
+                    switchMap((createdUser: IUser) => {
+                        const {password, ...result} = createdUser;
+                        return this.authService.generateJWT(createdUser).pipe(
+                            map((token: string) => ({
+                                user: result,
+                                token: token,
+                            })),
+                        );
                     }),
                     catchError((err) => throwError(() => err))
                 );

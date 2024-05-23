@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 
 
@@ -13,6 +13,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { environment } from 'environments/environment';
+import { AuthenticationService, JWT_NAME } from './services/auth/authentication.service';
+import { UserNavigationEntries } from './core/interfaces/user-navigation-entries';
+import { map } from 'rxjs';
 
 
 @Component({
@@ -27,17 +30,19 @@ import { environment } from 'environments/environment';
     </button>
     <span>Blog Status Code 666</span>
     <span class="example-spacer"></span>
-    <button mat-flat-button class="link-button" routerLink="users" aria-label="Example button admin">
+    @if(userIsAdmin()) {
+      <button mat-flat-button class="link-button" routerLink="users" aria-label="Example button admin">
       Users
-    </button>
-    <button mat-flat-button class="link-button" style="margin-left: 10px;" routerLink="admin" aria-label="Example button users">
+      </button>
+      <button mat-flat-button class="link-button" style="margin-left: 10px;" routerLink="admin" aria-label="Example button users">
       Admin
-    </button>
+      </button>
+    }
     <mat-form-field name="loginRegisterDropdown" style="margin-left: 16px; margin-top: 16px;">
       <mat-select placeholder="Acceso" (selectionChange)="navigateTo($event.value)">
-      @for(entry of entries; track entry.title) {
+      @for(entry of userNavigationEntries; track entry.name) {
         <mat-option  [value]="entry.link">
-        {{ entry.title }}
+        {{ entry.name }}
         </mat-option> 
         }
       </mat-select>
@@ -52,28 +57,110 @@ import { environment } from 'environments/environment';
 }
   `
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend_nestjs_app';
+  isLogged= false;
+  private userId: number | null = null;
 
-  entries= [
+  userNavigationEntries: UserNavigationEntries[] = [
     {
-      title: 'Register',
-      decription: 'Register a new user',
-      link: 'register'
+      name: 'login',
+      link: 'login',
     },
     {
-      title: 'Login',
-      decription: 'Login as a user',
-      link: 'login'
+      name: 'register',
+      link: 'register',
     }
   ];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authService: AuthenticationService) {
     console.log('environment Control: ', environment.CONTROL);
     console.log('environment API_URL: ', environment.API_URL);
   }
 
-  navigateTo(value: string) {
-    this.router.navigate(['../', value]) 
+  ngOnInit(): void {
+    this.authService.userId$.pipe(
+      map((userId: number | null) => {
+        this.userId = userId;
+        this.updateUserId(userId);
+      }),
+    ).subscribe();
+    this.authService.isLogged$.subscribe((isLogged) => {
+      this.updateUserNavigationEntries(isLogged);
+      this.updateUserAuthentication(isLogged);
+    });
   }
+
+  private updateUserNavigationEntries(isLogged: boolean) {
+    if (isLogged) {
+      this.userNavigationEntries = [
+        {
+          name: 'Logout',
+          link: 'logout',
+          description: 'this will log you out of the aplication',
+        },
+        {
+          name: 'Profile',
+          link: `users/${this.userId}`,
+        },
+        {
+          name: 'Update Profile',
+          link: 'update-profile',
+        }
+      ];
+    }else {
+      this.userNavigationEntries = [
+        {
+          name: 'Login',
+          link: 'login',
+          description: 'this will login you in to of the aplication',
+        },
+        {
+          name: 'Register',
+          link: 'register',
+        },
+      ];
+    }
+  }
+
+  private updateUserAuthentication(isLogged: boolean) {
+    if (!isLogged) {
+      this.isLogged = false;
+      this.clearUserData();
+      this.router.navigate(['/login']);
+    }else {
+      this.isLogged = true;
+    }
+  }
+
+  private clearUserData() {
+    this.updateUserId(null);
+  }
+
+  private updateUserId(userId: number | null) {
+    if (this.authService.isAuthenticated()) {
+      const profileEntry = this.userNavigationEntries.find(
+        (entry) => entry.name === 'Profile',
+      );
+      if (profileEntry) {
+        profileEntry.link = userId ? `users/${userId}` : ``;
+      }
+    }
+  }
+
+  userIsAdmin(): boolean {
+    console.log('### User is Admin? : ',this.authService.userIsAdmin() )
+    return this.authService.userIsAdmin();
+  }
+
+  navigateTo(value: string) {
+    if (value !== 'logout') {
+      this.router.navigate([value]) ;
+    }else {
+      this.authService.logout();
+    }
+  }
+
 }

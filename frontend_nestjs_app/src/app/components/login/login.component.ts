@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import  {  AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule,  ReactiveFormsModule, ValidationErrors, Validators  }  from  '@angular/forms';
-import { AuthenticationService } from 'app/services/authentication.service';
+import { AuthenticationService } from 'app/services/auth/authentication.service';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 
@@ -77,8 +77,10 @@ import { map } from 'rxjs/operators';
   `
 })
 export class LoginComponent implements OnInit {
+  userId!: number;
   hide = true;
   loginForm!: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthenticationService,
@@ -87,6 +89,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.createLoginForm();
+    this.authService.userId$.pipe(
+      map((userId: number| null) => {
+        if (userId)
+        this.userId = userId;
+      }),
+    ).subscribe();
   }
 
   createLoginForm() {
@@ -104,12 +112,22 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(loginForm: FormGroup) {
-    console.log('### form values', this.loginForm.value);
     if(this.loginForm.invalid) {
       return;
     }
-    this.authService.login(this.loginForm.value).pipe(
-      map(token => this.router.navigate(['/']))).subscribe();
+    this.authService.login(this.loginForm.value).subscribe(
+      {
+        next: (token) => {
+          if (token) {
+            const userId = this.authService.getBehaviorUserId();
+            if (userId) {
+              this.userId = userId;
+              this.router.navigate(['users', this.userId]);
+            }
+          }
+        }
+      }
+    );
     
   }
 

@@ -131,5 +131,13 @@ Vamos a la parte de html y con los mat-form-field creemos esos campos.
 --> test create() solo puede crear usuarios con role 'user'.
 --> test ver que funciona la paginación, crear al menos 15 usuarios para estas comprobaciones.
 
+Task 17: Blog Module & TypeOrm @ManyToOne() relation
 
+New module blog, tendremos los modelos para las entradas del blog, construimos los conttroladores y servicios.
+
+Criterios de Acepatción:
+- New module blog
+- blog-entry.entity, blog-entry.interface manyToOne RelationShip to user
+- Blog Entry (blog interface) con relación muchos a uno con el usuario
+- uno a muchos relación de usuarios con las entradas
 

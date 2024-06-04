@@ -55,4 +55,11 @@ export class UsersService {
     return this.http.put(`${BASE_URL}/api/users/${user.id}`, user).pipe(
       map((user: IUser) => user));
   }
+
+  uploadProfileImage(formData:  FormData): Observable<any> {
+    return this.http.post<FormData>(`${BASE_URL}/api/users/upload`, formData, {
+      reportProgress: true,
+      observe: 'events',
+    });
+  }
 }

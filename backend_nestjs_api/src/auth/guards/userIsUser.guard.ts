@@ -6,6 +6,7 @@ import {
     forwardRef,
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
+import { IUserFindResponse } from 'src/user/dto/user-find.dto';
 import { IUser } from 'src/user/interfaces/user.interface';
 import { UserService } from 'src/user/services/user.service';
 
@@ -20,17 +21,19 @@ export class UserIsUserGuard implements CanActivate {
         const user: IUser = request.user;
         console.log('### user:', user );
         
-        return this.userService.findOne(user.id).pipe(
-            map((user: IUser) => {
-                let hasPermission = false;
-
-                console.log('### USER IS USER GUARD:', user.id, params.id);
-                if (user.id === Number(params.id)) {
-                    hasPermission = true;
-                }
-                return user && hasPermission;
-            }),
-        );
-        
+        try {
+            return this.userService.findOneById(user.id).pipe(
+                map((user: IUser) => {
+                    let hasPermission = false;
+                    console.log('### USER IS USER GUARD:', user.id, params.id);
+                    if (user.id === Number(params.id)) {
+                        hasPermission = true;
+                    }
+                    return user && hasPermission;
+                }),
+            );
+        }catch (err) {
+            throw err;
+        }
     }
 }

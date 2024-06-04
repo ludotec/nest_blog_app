@@ -11,15 +11,27 @@ export class AuthService {
         private readonly jwtService: JwtService) {}
 
     generateJWT(user: IUser): Observable<string> {
-        return from(this.jwtService.signAsync({ user }));
+        try {
+            return from(this.jwtService.signAsync({ user }));
+        }catch (err) {
+            throw err;
+        }
     }
 
     hashPassword(password: string): Observable<string> {
-        return from<string>(bcrypt.hash(password, 12));
+        try {
+            return from<string>(bcrypt.hash(password, 12));
+        }catch (err) {
+            throw err;
+        }
     }
 
     comparePasswords( passwordSended: string, passwordHash: string): Observable<any> {
         const match= bcrypt.compare(passwordSended, passwordHash);
-        return from<any | boolean>(match);
+        try {
+            return from<any | boolean>(match);
+        }catch (err) {
+            throw err;
+        }
     }  
 }

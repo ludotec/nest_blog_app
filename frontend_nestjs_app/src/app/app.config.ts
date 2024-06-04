@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), provideServiceWorker('ngsw-worker.js', {
         enabled: !isDevMode(),
         registrationStrategy: 'registerWhenStable:30000'
-    }), provideAnimationsAsync(), provideAnimationsAsync(),
+    }), provideAnimationsAsync(),
     provideHttpClient(withInterceptors([jwtInterceptor, serverErrorInterceptor])),
     JwtHelperService, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
     {provide: ErrorHandler, useClass: GlobalErrorHandler}]
